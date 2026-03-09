@@ -1,0 +1,913 @@
+ <!DOCTYPE html>     <!--CO-1 -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idea Incubator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #080c12;
+      --bg2: #0f1520;
+      --bg3: #161e2e;
+      --border: #1e2d42;
+      --text: #c8d8ea;
+      --text-dim: #6b8099;
+      --accent: #4af0b0;
+      --accent2: #3b8beb;
+      --danger: #f05050;
+      --radius: 10px;
+      --radius-lg: 16px;
+    }
+      /* CO-2 */
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    h1, h2, h3 { font-family: 'Syne', sans-serif; }
+    a { color: var(--accent2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ===== BUTTONS ===== */
+    .btn-primary {
+      display: inline-block;
+      background: var(--accent);
+      color: #080c12;
+      border: none;
+      padding: 0.6rem 1.25rem;
+      border-radius: var(--radius);
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+    .btn-primary.full { width: 100%; text-align: center; padding: 0.75rem; font-size: 1rem; }
+    .btn-primary.large { padding: 0.8rem 1.8rem; font-size: 1rem; }
+    .btn-primary.small { padding: 0.45rem 0.9rem; font-size: 0.8rem; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .btn-ghost {
+      display: inline-block;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.6rem 1.25rem;
+      border-radius: var(--radius);
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-ghost:hover { border-color: var(--accent2); color: var(--accent2); }
+    .btn-ghost.large { padding: 0.8rem 1.8rem; font-size: 1rem; }
+    .btn-ghost.small { padding: 0.35rem 0.7rem; font-size: 0.8rem; }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; gap: 2rem;
+      background: rgba(8,12,18,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 2.5rem;
+    }
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem; font-weight: 800;
+      color: var(--accent); white-space: nowrap;
+    }
+    .nav-links { list-style: none; display: flex; gap: 1.5rem; flex: 1; }
+    .nav-links a { color: var(--text-dim); font-size: 0.9rem; transition: color 0.15s; }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+    .nav-auth { display: flex; gap: 0.6rem; margin-left: auto; }
+
+    /* ===== USER BAR ===== */
+    .user-bar {
+      background: var(--bg3);
+      border-bottom: 1px solid var(--border);
+      padding: 0.5rem 2.5rem;
+      display: flex; align-items: center; gap: 1rem;
+      font-size: 0.9rem;
+    }
+    .user-bar strong { color: var(--accent); }
+
+    /* ===== AUTH PANELS ===== */
+    .auth-panel {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.72);
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(5px);
+    }
+    .auth-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      width: 100%; max-width: 420px;
+      position: relative;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .auth-card h2 { font-size: 1.6rem; color: #fff; }
+    .auth-sub { color: var(--text-dim); font-size: 0.9rem; margin-top: -0.5rem; }
+    .auth-card input {
+      width: 100%; padding: 0.7rem 1rem;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text); font-size: 0.95rem;
+      transition: border-color 0.15s;
+    }
+    .auth-card input:focus { outline: none; border-color: var(--accent2); }
+    .close-btn {
+      position: absolute; top: 1rem; right: 1rem;
+      background: none; border: none; color: var(--text-dim);
+      font-size: 1.1rem; cursor: pointer;
+    }
+    .close-btn:hover { color: var(--text); }
+    .auth-switch { font-size: 0.85rem; color: var(--text-dim); text-align: center; }
+
+    /* ===== HERO ===== */
+    .hero {
+      text-align: center;
+      padding: 6rem 2rem 5rem;
+      background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(74,240,176,0.07) 0%, transparent 70%);
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(74,240,176,0.1);
+      border: 1px solid rgba(74,240,176,0.25);
+      color: var(--accent);
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px; font-size: 0.8rem;
+      margin-bottom: 1.5rem;
+      font-family: 'Syne', sans-serif;
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 800; line-height: 1.1;
+      color: #e8f2ff; margin-bottom: 1.25rem;
+    }
+    .hero h1 .accent { color: var(--accent); }
+    .hero > p {
+      max-width: 560px; margin: 0 auto 2rem;
+      color: var(--text-dim); font-size: 1.05rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
+    .hero-stats {
+      display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap;
+      border-top: 1px solid var(--border); padding-top: 2rem;
+    }
+    .stat { display: flex; flex-direction: column; align-items: center; }
+    .stat-num { font-family: 'Syne', sans-serif; font-size: 1.7rem; font-weight: 800; color: var(--accent); }
+    .stat span:last-child { font-size: 0.8rem; color: var(--text-dim); }
+
+    /* ===== FEATURES ===== */
+    .features {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem; padding: 4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    @media (max-width: 720px) { .features { grid-template-columns: 1fr; padding: 3rem 2rem; } }
+    .feature {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 2rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .feature:hover { border-color: rgba(74,240,176,0.3); transform: translateY(-3px); }
+    .feature-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .feature h2 { font-size: 1.2rem; color: #fff; margin-bottom: 0.5rem; }
+    .feature p { color: var(--text-dim); font-size: 0.9rem; }
+
+    /* ===== SECTION COMMON ===== */
+    .section-header { margin-bottom: 2rem; }
+    .section-header h2 { font-size: 1.8rem; color: #fff; margin-bottom: 0.4rem; }
+    .section-header p { color: var(--text-dim); font-size: 0.95rem; }
+    .card-grid { display: grid; gap: 1rem; margin-top: 1.5rem; }
+
+    /* ===== SHARE SECTION ===== */
+    .share {
+      padding: 4rem; border-bottom: 1px solid var(--border);
+      max-width: 900px; margin: 0 auto;
+    }
+    .share-form-wrapper {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 2rem;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .share-type-toggle { display: flex; gap: 0.5rem; }
+    .type-btn {
+      flex: 1; padding: 0.6rem; border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: transparent; color: var(--text-dim);
+      font-family: 'Syne', sans-serif; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .type-btn.active { background: rgba(74,240,176,0.12); border-color: var(--accent); color: var(--accent); }
+    .share-form-wrapper textarea, .collaboration textarea {
+      width: 100%; min-height: 110px; padding: 0.8rem 1rem;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+      resize: vertical; transition: border-color 0.15s;
+    }
+    .share-form-wrapper textarea:focus,
+    .collaboration textarea:focus { outline: none; border-color: var(--accent2); }
+    .file-label {
+      display: block; padding: 0.7rem 1rem;
+      background: var(--bg2); border: 1px dashed var(--border);
+      border-radius: var(--radius); cursor: pointer;
+      color: var(--text-dim); font-size: 0.9rem;
+      transition: border-color 0.15s;
+    }
+    .file-label:hover { border-color: var(--accent2); }
+    .file-label input { display: none; }
+
+    /* ===== IDEA CARDS ===== */
+    .idea-card {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.25rem;
+      animation: fadeUp 0.3s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .idea-card .card-meta { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.75rem; }
+    .idea-card .card-author { font-size: 0.8rem; color: var(--text-dim); }
+    .badge {
+      display: inline-block; padding: 0.25rem 0.55rem;
+      border-radius: 5px; font-size: 0.72rem;
+      font-family: 'Syne', sans-serif; font-weight: 700;
+    }
+    .badge.idea     { background: rgba(74,240,176,0.15); color: var(--accent); }
+    .badge.resource { background: rgba(59,139,235,0.15); color: var(--accent2); }
+    .badge.featured { background: rgba(240,200,50,0.15); color: #f0c832; }
+    .idea-card p { margin-bottom: 0.5rem; font-size: 0.95rem; }
+    .votes {
+      display: flex; align-items: center; gap: 0.5rem;
+      margin-top: 0.75rem; padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+    .vote-count {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      min-width: 2rem; text-align: center; font-size: 1rem;
+    }
+    .vote-count.positive { color: var(--accent); }
+    .vote-count.negative { color: var(--danger); }
+    .upvote, .downvote {
+      padding: 0.35rem 0.75rem; border: none; border-radius: 6px;
+      font-size: 0.8rem; cursor: pointer; font-weight: 600;
+      transition: opacity 0.15s;
+    }
+    .upvote   { background: rgba(74,240,176,0.15); color: var(--accent); }
+    .downvote { background: rgba(240,80,80,0.15);  color: var(--danger); }
+    .upvote:hover   { background: rgba(74,240,176,0.28); }
+    .downvote:hover { background: rgba(240,80,80,0.28); }
+    .upvote:disabled, .downvote:disabled { opacity: 0.4; cursor: not-allowed; }
+    .vote-log { font-size: 0.8rem; color: var(--text-dim); margin-top: 0.4rem; }
+    .vote-log.down { color: var(--danger); }
+
+    /* Comments */
+    .comments { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+    .comments h4 { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 0.6rem; }
+    .comment-list { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.75rem; }
+    .comment-list p { font-size: 0.88rem; }
+    .comment-list strong { color: var(--accent2); }
+    .comment-row { display: flex; gap: 0.5rem; }
+    .comment-input {
+      flex: 1; padding: 0.5rem 0.75rem;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text); font-size: 0.88rem;
+    }
+    .comment-input:focus { outline: none; border-color: var(--accent2); }
+    .comment-btn {
+      padding: 0.5rem 0.9rem; background: var(--accent2); color: #fff;
+      border: none; border-radius: var(--radius); cursor: pointer;
+      font-size: 0.8rem; font-weight: 600;
+    }
+
+    /* ===== COLLABORATION ===== */
+    .collaboration {
+      max-width: 900px; margin: 0 auto;
+      padding: 4rem; border-bottom: 1px solid var(--border);
+    }
+    .collab-input-row { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1rem; }
+    .collab-input-row textarea { flex: 1; min-height: 80px; }
+    .poll-box {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.5rem; margin-top: 2rem;
+    }
+    .poll-box h3 { margin-bottom: 0.4rem; color: #fff; }
+    .poll-box > p { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1rem; }
+    .poll-options { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+    .poll-option {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.6rem 0.9rem; border-radius: var(--radius);
+      border: 1px solid var(--border); cursor: pointer; transition: border-color 0.15s;
+    }
+    .poll-option:has(input:checked) { border-color: var(--accent2); background: rgba(59,139,235,0.08); }
+    #pollResult { margin-top: 0.75rem; font-style: italic; color: var(--accent); font-size: 0.9rem; }
+
+    /* ===== RESOURCES ===== */
+    .resources {
+      max-width: 900px; margin: 0 auto;
+      padding: 4rem; border-bottom: 1px solid var(--border);
+    }
+    #searchBar {
+      width: 100%; padding: 0.7rem 1rem; margin-bottom: 1.5rem;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text); font-size: 0.95rem;
+      transition: border-color 0.15s;
+    }
+    #searchBar:focus { outline: none; border-color: var(--accent2); }
+    .resource-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 1rem; }
+    .resource-card {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.5rem;
+      display: flex; flex-direction: column; gap: 0.6rem;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .resource-card:hover { transform: translateY(-3px); border-color: rgba(59,139,235,0.4); }
+    .resource-card h3 { color: #fff; font-size: 1rem; }
+    .resource-card p { color: var(--text-dim); font-size: 0.88rem; flex: 1; }
+
+    /* ===== EXPLORE ===== */
+    .explore {
+      max-width: 900px; margin: 0 auto;
+      padding: 4rem; border-bottom: 1px solid var(--border);
+    }
+    /* CO-2 */
+    .explore-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 1rem; }
+    .explore-card {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.5rem;
+      display: flex; flex-direction: column; gap: 0.6rem;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .explore-card:hover { transform: translateY(-3px); border-color: rgba(74,240,176,0.3); }
+    .explore-icon { font-size: 2rem; }
+    .explore-card h3 { color: #fff; font-size: 1rem; }
+    .explore-card p { color: var(--text-dim); font-size: 0.88rem; flex: 1; }
+    #randomIdea { font-style: italic; color: var(--accent); font-size: 0.9rem; }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 0.8rem 1.4rem;
+      font-size: 0.9rem; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      animation: toastIn 0.3s ease;
+    }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .toast.success { border-color: rgba(74,240,176,0.4); color: var(--accent); }
+    .toast.error   { border-color: rgba(240,80,80,0.4);  color: var(--danger); }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--bg2); padding: 2.5rem;
+      border-top: 1px solid var(--border); text-align: center;
+    }
+    .footer-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem; max-width: 900px; margin: 0 auto 1rem;
+    }
+    .footer-brand { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--accent); }
+    .footer-links { list-style: none; display: flex; gap: 1.25rem; }
+    .footer-links a { color: var(--text-dim); font-size: 0.85rem; transition: color 0.15s; }
+    .footer-links a:hover { color: var(--text); text-decoration: none; }
+    .footer-copy { color: var(--text-dim); font-size: 0.8rem; }
+
+    /* ===== UTILITY ===== */
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+<!-- CO-1 -->
+  <!-- Header -->
+  <header class="navbar">
+    <div class="logo">⚡ Idea Incubator</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#resources">Resources</a></li>
+        <li><a href="#collaboration">Collaboration</a></li>
+        <li><a href="#explore">Explore</a></li>
+        <li><a href="#share">Share</a></li>
+      </ul>
+    </nav>
+    <div class="nav-auth">
+      <button class="btn-ghost" onclick="togglePanel('loginPanel')">Login</button>
+      <button class="btn-primary" onclick="togglePanel('signupPanel')">Sign up</button>
+    </div>
+  </header>
+
+  <!-- User status bar -->
+  <div id="userBar" class="user-bar hidden">
+    <span>👋 Welcome back, <strong id="userBarName"></strong></span>
+    <button class="btn-ghost small" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Signup Panel -->
+  <div id="signupPanel" class="auth-panel hidden">
+    <div class="auth-card">
+      <button class="close-btn" onclick="togglePanel('signupPanel')">✕</button>
+      <h2>Create your account</h2>
+      <p class="auth-sub">Join millions of innovators worldwide</p>
+      <input type="email" id="signupEmail" placeholder="Email address">
+      <input type="text" id="signupUsername" placeholder="Choose a username">
+      <input type="password" id="signupPassword" placeholder="Password (min 6 chars)">
+      <button class="btn-primary full" onclick="handleSignup()">Create Account</button>
+      <p class="auth-switch">Already have an account? <a href="#" onclick="switchPanel('signupPanel','loginPanel')">Login</a></p>
+    </div>
+  </div>
+<!-- CO-2(INPUT HANDLING) -->
+  <!-- Login Panel -->
+  <div id="loginPanel" class="auth-panel hidden">
+    <div class="auth-card">
+      <button class="close-btn" onclick="togglePanel('loginPanel')">✕</button>
+      <h2>Welcome back</h2>
+      <p class="auth-sub">Sign in to your account</p>
+      <input type="email" id="loginEmail" placeholder="Email address">
+      <input type="password" id="loginPassword" placeholder="Password">
+      <button class="btn-primary full" onclick="handleLogin()">Login</button>
+      <p class="auth-switch">No account? <a href="#" onclick="switchPanel('loginPanel','signupPanel')">Sign up free</a></p>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-badge">🚀 Open Platform · Free to Use</div>
+    <h1>Where ideas<br><span class="accent">take shape</span></h1>
+    <p>Millions of innovators, creators, and entrepreneurs bring their visions to life — the most dynamic platform for building, sharing, and scaling ideas worldwide.</p>
+    <div class="hero-actions">
+      <button class="btn-primary large" onclick="togglePanel('signupPanel')">Get started free</button>
+      <a href="#explore" class="btn-ghost large">Explore ideas →</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">12K+</span><span>Ideas shared</span></div>
+      <div class="stat"><span class="stat-num">4.8K</span><span>Collaborators</span></div>
+      <div class="stat"><span class="stat-num">320</span><span>Projects launched</span></div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="feature">
+      <div class="feature-icon">🤝</div>
+      <h2>Collaborate</h2>
+      <p>Work together on projects from anywhere in the world, in real time.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">💡</div>
+      <h2>Innovate</h2>
+      <p>Turn sparks of inspiration into real-world solutions with community support.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📈</div>
+      <h2>Scale</h2>
+      <p>Grow your vision from a rough prototype to global impact.</p>
+    </div>
+  </section>
+
+  <!-- Share Section -->
+  <!-- CO-2(FORMS & INPUT HANDLING) -->
+
+  <section id="share" class="share">
+    <div class="section-header">
+      <h2>Share Your Contribution</h2>
+      <p>Choose whether you want to share an idea or a resource with the community.</p>
+    </div>
+    <div class="share-form-wrapper">
+      <div class="share-type-toggle">
+        <button id="typeIdeaBtn" class="type-btn active" onclick="setShareType('idea')">💡 Share an Idea</button>
+        <button id="typeResourceBtn" class="type-btn" onclick="setShareType('resource')">📎 Share a Resource</button>
+      </div>
+      <input type="hidden" id="shareType" value="idea">
+      <textarea id="shareText" placeholder="Describe your idea or resource in detail..."></textarea>
+      <label class="file-label" for="fileUpload">
+        <span id="fileLabel">📁 Attach a file (PDF, DOCX, PNG…)</span>
+        <input type="file" id="fileUpload" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.png,.jpg,.jpeg" onchange="updateFileLabel(this)">
+      </label>
+      <button class="btn-primary full" onclick="handleShare()">Post Contribution</button>
+    </div>
+    <div id="sharedItems" class="card-grid"></div>
+  </section>
+
+  <!-- Collaboration Section -->
+  <section id="collaboration" class="collaboration">
+    <div class="section-header">
+      <h2>Collaboration Board</h2>
+      <p>Post ideas and vote on what matters most to the community.</p>
+    </div>
+    <div class="collab-input-row">
+      <textarea id="ideaInput" placeholder="Share a quick idea with the board..."></textarea>
+      <button class="btn-primary" onclick="addIdea()">Post Idea</button>
+    </div>
+    <div id="ideaBoard" class="card-grid"></div>
+    <div class="poll-box">
+      <h3>📊 Quick Poll</h3>
+      <p>Which feature should we build next?</p>
+      <div class="poll-options">
+        <label class="poll-option"><input type="radio" name="poll" value="Live video collaboration"> Live video collaboration</label>
+        <label class="poll-option"><input type="radio" name="poll" value="AI idea assistant"> AI idea assistant</label>
+        <label class="poll-option"><input type="radio" name="poll" value="Private team workspaces"> Private team workspaces</label>
+        <label class="poll-option"><input type="radio" name="poll" value="Idea marketplace"> Idea marketplace</label>
+      </div>
+      <button class="btn-primary" id="pollBtn" onclick="submitPoll()">Cast Vote</button>
+      <p id="pollResult"></p>
+    </div>
+  </section>
+
+  <!-- Resources Section -->
+  <section id="resources" class="resources">
+    <div class="section-header">
+      <h2>Resources</h2>
+      <p>Tools and templates to kickstart your next big idea.</p>
+    </div>
+    <input type="text" id="searchBar" placeholder="🔍 Search resources...">
+    <div class="resource-grid">
+      <div class="resource-card" data-category="design">
+        <span class="badge featured">⭐ Featured</span>
+        <h3>Pitch Deck Template</h3>
+        <p>Professional slides to present your idea to investors and collaborators.</p>
+        <a href="files/pitch-deck.pdf" download class="btn-primary small">Download PDF</a>
+      </div>
+      <div class="resource-card" data-category="coding">
+        <h3>DSA Quick Reference</h3>
+        <p>Cheat sheet for Data Structures &amp; Algorithms — essential for technical projects.</p>
+        <a href="files/dsa-guide.pdf" download class="btn-primary small">Download PDF</a>
+      </div>
+      <div class="resource-card" data-category="collaboration">
+        <h3>Design Thinking Guide</h3>
+        <p>Step-by-step methodology to turn raw ideas into validated prototypes.</p>
+        <a href="files/design-guide.pdf" download class="btn-primary small">Download PDF</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Explore Section -->
+  <section id="explore" class="explore">
+    <div class="section-header">
+      <h2>Explore</h2>
+      <p>Discover what the community is building and find your next spark.</p>
+    </div>
+    <div class="explore-grid">
+      <div class="explore-card">
+        <div class="explore-icon">🔥</div>
+        <h3>Trending Ideas</h3>
+        <p>See what's hot in the incubator right now.</p>
+        <button class="btn-primary small" onclick="showTrending()">View Trends</button>
+      </div>
+      <div class="explore-card">
+        <div class="explore-icon">🏆</div>
+        <h3>Innovation Stories</h3>
+        <p>Spotlight on successful projects and case studies from our community.</p>
+        <button class="btn-primary small" onclick="showStories()">Read Stories</button>
+      </div>
+      <div class="explore-card">
+        <div class="explore-icon">🎲</div>
+        <h3>Random Idea Generator</h3>
+        <p>Need inspiration? Let us spark something unexpected for you.</p>
+        <button class="btn-primary small" onclick="generateIdea()">Generate Idea</button>
+        <p id="randomIdea"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">⚡ Idea Incubator</div>
+      <ul class="footer-links">
+        <li><a href="#">Terms</a></li>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Security</a></li>
+        <li><a href="#">Status</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <p class="footer-copy">© 2026 Idea Incubator Project Collaboration Platform, Inc.</p>
+  </footer>
+
+  <script>
+    // =====================
+    // State
+    // =====================
+    let currentUser = null;
+
+    // =====================
+    // Toast
+    // =====================
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = `toast ${type}`;
+      toast.classList.remove('hidden');
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => toast.classList.add('hidden'), 3200);
+    }
+
+    // =====================
+    // Auth Panel Helpers
+    // =====================
+    function togglePanel(id) {
+      document.getElementById(id).classList.toggle('hidden');
+    }
+    function switchPanel(hide, show) {
+      document.getElementById(hide).classList.add('hidden');
+      document.getElementById(show).classList.remove('hidden');
+    }
+
+    // =====================
+    // Signup
+    // =====================
+      //(CO-5 handle functions)
+      // (CO-4 EVENT HANDLING)
+      // (CO-3 CONDITIONAL STATEMENTS)
+    function handleSignup() {
+      const email    = document.getElementById('signupEmail').value.trim();
+      const username = document.getElementById('signupUsername').value.trim();
+      const password = document.getElementById('signupPassword').value;
+      if (!email || !username) return showToast('Please fill in all fields.', 'error');
+      if (password.length < 6) return showToast('Password must be at least 6 characters.', 'error');
+      currentUser = username;
+      updateUserBar();
+      togglePanel('signupPanel');
+      ['signupEmail','signupUsername','signupPassword'].forEach(id => document.getElementById(id).value = '');
+      showToast(`Account created! Welcome, ${currentUser} 🎉`);
+    }
+
+    // =====================
+    // Login
+    // =====================
+
+      // CO-3
+      //CO-5(handle login function or form validation)
+    function handleLogin() {
+      const email    = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      if (!email || !password) return showToast('Please fill in both fields.', 'error');
+      if (password.length < 6) return showToast('Password must be at least 6 characters.', 'error');
+      currentUser = email.split('@')[0];
+      updateUserBar();
+      togglePanel('loginPanel');
+      ['loginEmail','loginPassword'].forEach(id => document.getElementById(id).value = '');
+      showToast(`Welcome back, ${currentUser}! 👋`);
+    }
+
+    // =====================
+    // Logout
+    // =====================
+    function logout() {
+      currentUser = null;
+      document.getElementById('userBar').classList.add('hidden');
+      showToast('Logged out successfully.');
+    }
+
+    function updateUserBar() {
+      document.getElementById('userBarName').textContent = currentUser;
+      document.getElementById('userBar').classList.remove('hidden');
+    }
+
+    // =====================
+    // Share Type Toggle
+    // =====================
+    function setShareType(type) {
+      document.getElementById('shareType').value = type;
+      document.getElementById('typeIdeaBtn').classList.toggle('active', type === 'idea');
+      document.getElementById('typeResourceBtn').classList.toggle('active', type === 'resource');
+    }
+
+    function updateFileLabel(input) {
+      document.getElementById('fileLabel').textContent =
+        input.files.length ? `📎 ${input.files[0].name}` : '📁 Attach a file (PDF, DOCX, PNG…)';
+    }
+
+    // =====================
+    // Share Form
+    // =====================
+
+    // CO-5(Forms)
+    function handleShare() {
+      if (!currentUser) return showToast('You must be logged in to share!', 'error');
+      const type      = document.getElementById('shareType').value;
+      const text      = document.getElementById('shareText').value.trim();
+      const fileInput = document.getElementById('fileUpload');
+      if (!text) return showToast('Please write something before posting.', 'error');
+      const fileInfo = fileInput.files.length ? fileInput.files[0].name : null;
+      document.getElementById('sharedItems').prepend(
+        createIdeaCard({ type, text, author: currentUser, fileInfo })
+      );
+      document.getElementById('shareText').value = '';
+      fileInput.value = '';
+      document.getElementById('fileLabel').textContent = '📁 Attach a file (PDF, DOCX, PNG…)';
+      showToast('Contribution posted!');
+    }
+
+    // =====================
+    // Idea Card Factory
+    // =====================
+    function createIdeaCard({ type, text, author, fileInfo }) {
+      const card = document.createElement('div');
+      card.className = 'idea-card';
+      const badgeClass = type === 'resource' ? 'resource' : 'idea';
+      const badgeLabel = type === 'resource' ? '📎 RESOURCE' : '💡 IDEA';
+      const fileHTML = fileInfo
+        ? `<p style="font-size:0.82rem;color:var(--text-dim);margin-bottom:0.25rem;">📎 Attached: ${fileInfo}</p>`
+        : '';
+      card.innerHTML = `
+        <div class="card-meta">
+          <span class="badge ${badgeClass}">${badgeLabel}</span>
+          <span class="card-author">by <strong style="color:var(--accent2)">${author}</strong></span>
+        </div>
+        <p>${escapeHTML(text)}</p>
+        ${fileHTML}
+        <div class="votes">
+          <span class="vote-count" data-count="0">0</span>
+          <button class="upvote">▲ Upvote</button>
+          <button class="downvote">▼ Downvote</button>
+        </div>
+        <div class="vote-logs"></div>
+        <div class="comments">
+          <h4>Comments</h4>
+          <div class="comment-list"></div>
+          <div class="comment-row">
+            <input type="text" class="comment-input" placeholder="Write a comment…">
+            <button class="comment-btn">Post</button>
+          </div>
+        </div>
+      `;
+
+      let hasVoted = false;
+      const countEl  = card.querySelector('.vote-count');
+      const logsEl   = card.querySelector('.vote-logs');
+      const upBtn    = card.querySelector('.upvote');
+      const downBtn  = card.querySelector('.downvote');
+
+      function getCount() { return parseInt(countEl.dataset.count) || 0; }
+      function setCount(n) {
+        countEl.dataset.count = n;
+        countEl.textContent = n;
+        countEl.className = 'vote-count' + (n > 0 ? ' positive' : n < 0 ? ' negative' : '');
+      }
+      function lockVoting() {
+        hasVoted = true;
+        upBtn.disabled = true;
+        downBtn.disabled = true;
+      }
+      
+        // CO-4 &CO-3
+
+      upBtn.addEventListener('click', () => {
+        if (hasVoted) return showToast('You already voted on this.', 'error');
+        if (!currentUser) return showToast('Log in to vote.', 'error');
+        setCount(getCount() + 1);
+        const log = document.createElement('p');
+        log.className = 'vote-log';
+        log.innerHTML = `<strong>${currentUser}</strong> upvoted this.`;
+        logsEl.appendChild(log);
+        lockVoting();
+        showToast('Upvote recorded!');
+      });
+
+      downBtn.addEventListener('click', () => {
+        if (hasVoted) return showToast('You already voted on this.', 'error');
+        if (!currentUser) return showToast('Log in to vote.', 'error');
+        const reason = prompt('Please give a reason for your downvote:');
+        if (reason && reason.trim()) {
+          setCount(getCount() - 1);
+          const log = document.createElement('p');
+          log.className = 'vote-log down';
+          log.innerHTML = `<strong>${currentUser}</strong> downvoted: ${escapeHTML(reason.trim())}`;
+          logsEl.appendChild(log);
+          lockVoting();
+          showToast('Downvote recorded.');
+        } else {
+          showToast('Downvote cancelled — a reason is required.', 'error');
+        }
+      });
+
+      const commentList  = card.querySelector('.comment-list');
+      const commentInput = card.querySelector('.comment-input');
+      const commentBtn   = card.querySelector('.comment-btn');
+
+        // Co-3(COnditions)
+        // CO-4 (Event handling,DOM manipulation)
+        // CO-5(Form Validation,input handling)=
+
+      function postComment() {
+        if (!currentUser) return showToast('Log in to comment.', 'error');
+        const val = commentInput.value.trim();
+        if (!val) return;
+        const p = document.createElement('p');
+        p.innerHTML = `<strong>${currentUser}:</strong> ${escapeHTML(val)}`;
+        commentList.appendChild(p);
+        commentInput.value = '';
+      }
+      commentBtn.addEventListener('click', postComment);
+      commentInput.addEventListener('keydown', e => { if (e.key === 'Enter') postComment(); });
+
+      return card;
+    }
+
+    // =====================
+    // Collaboration Board
+    // =====================
+    function addIdea() {
+      const input = document.getElementById('ideaInput');
+      const text  = input.value.trim();
+      if (!currentUser) return showToast('Log in first to post an idea.', 'error');
+      if (!text)        return showToast('Please enter an idea.', 'error');
+      document.getElementById('ideaBoard').prepend(
+        createIdeaCard({ type: 'idea', text, author: currentUser })
+      );
+      input.value = '';
+      showToast('Idea posted to the board!');
+    }
+
+    // =====================
+    // Poll
+    // =====================
+    function submitPoll() {
+      const selected = document.querySelector('input[name="poll"]:checked');
+      const result   = document.getElementById('pollResult');
+      if (!selected) {
+        result.textContent = 'Please select an option first.';
+        result.style.color = 'var(--danger)';
+        return;
+      }
+      result.textContent = `✅ You voted for: "${selected.value}"`;
+      result.style.color = 'var(--accent)';
+      document.querySelectorAll('input[name="poll"]').forEach(r => r.disabled = true);
+      document.getElementById('pollBtn').disabled = true;
+      showToast('Vote cast!');
+    }
+
+    // =====================
+    // Resources Search
+    // =====================
+
+    // CO-4
+    document.getElementById('searchBar').addEventListener('input', function () {
+      const filter = this.value.toLowerCase();
+      document.querySelectorAll('.resource-card').forEach(card => {
+        card.style.display = card.textContent.toLowerCase().includes(filter) ? '' : 'none';
+      });
+    });
+
+    // =====================
+    // Explore
+    // =====================
+    function showTrending() {
+      showToast('🔥 Trending: AI study tools · Sustainable packaging · Smart health trackers');
+    }
+    function showStories() {
+      showToast('🏆 A student team turned a prototype into a funded startup!');
+    }
+    function generateIdea() {
+      const ideas = [
+        "A smart water bottle that tracks daily hydration goals. 💧",
+        "An app that swaps unused food between neighbours. 🥗",
+        "A wearable that translates sign language in real time. 🤟",
+        "A solar-powered backpack with built-in charging ports. ☀️",
+        "A browser extension that summarises academic papers in plain English. 📚",
+        "An AI tool that matches volunteer skills with local nonprofits. 🤝",
+        "A 'parking karma' app where drivers share real-time spot availability. 🚗",
+      ];
+      const el = document.getElementById('randomIdea');
+      el.style.opacity = 0;
+      setTimeout(() => {
+        el.textContent = ideas[Math.floor(Math.random() * ideas.length)];
+        el.style.transition = 'opacity 0.3s';
+        el.style.opacity = 1;
+      }, 150);
+    }
+
+    // =====================
+    // Utility
+    // =====================
+    function escapeHTML(str) {
+      return str
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;');
+    }
+  </script>
+</body>
+</html>
